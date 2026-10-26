@@ -30,6 +30,7 @@ import {
   artifactAliases,
   artifactLogicalKey,
   artifactLogicalKeyFromRow,
+  readCurrentArtifactHeads,
   readIntentArtifactEntries,
   sameLogicalArtifact,
   selectCanonicalArtifact,
@@ -969,6 +970,8 @@ export const createGraphWriter = ({ g, scope = {}, clock } = {}) => {
     const rows = includeSuperseded ? allRows : selectCurrentArtifactHeads(allRows, scope.intentId);
     return includeContent ? rows : rows.map(compactArtifact);
   };
+
+  const getCurrentHeads = ({ id }) => readCurrentArtifactHeads(g, scope.intentId, id);
 
   // Neighbors of an artifact, optionally filtered by edge + direction.
   const getNeighbors = async ({ id, edge = null, direction = 'both', includeContent = false }) => {
@@ -1920,6 +1923,7 @@ export const createGraphWriter = ({ g, scope = {}, clock } = {}) => {
     getArtifact,
     lookupArtifacts,
     getIntentGraph,
+    getCurrentHeads,
     getNeighbors,
     searchGraph,
     recordTeamKnowledge,
